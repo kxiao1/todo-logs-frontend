@@ -25,3 +25,6 @@ yarn-error.log*
 # formatters
 .eslint*
 .*rc
+
+# url's/ secrets etc.
+src/constants.js

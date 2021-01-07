@@ -5,16 +5,25 @@
 }
 
 .logs {
+  /* display: inline-block; */
   position: absolute;
   max-width: 1140px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.close {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#readonly {
+  border: 0;
+}
+input, label {
+  margin: 2px;
+  vertical-align: middle;
 }
 
 @media (prefers-reduced-motion: no-preference) {
