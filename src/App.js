@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import DatePicker from "react-datepicker";
-import { Space, Table, Modal } from "antd";
+import { Switch, Button, Space, Table, Modal } from "antd";
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
@@ -21,10 +21,6 @@ function App() {
   const onDateChange = (date) => {
     // TODO
     setChosenDate(date);
-    console.log("date change");
-  };
-  const onClickOutside = () => {
-    // console.log("clicked outside"); // might need something more substantive?
   };
 
   const sendUpdateRequest = (type, item) => {
@@ -163,75 +159,91 @@ function App() {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <button onClick={() => showModal(record)}>Edit</button>
-          <button
+          <Button onClick={() => showModal(record)}>Edit</Button>
+          <Button
             disabled={record.completed}
             onClick={() => markAsComplete(record)}
           >
             Complete
-          </button>
-          <button onClick={() => deleteItem(record)}>Delete</button>
+          </Button>
+          <Button danger onClick={() => deleteItem(record)}>
+            Delete
+          </Button>
         </Space>
       ),
     },
   ];
-  const placeholder = <div>Loading...</div>;
+  const placeholder = <p id="placeholder">Loading...</p>;
   if (todo == null) {
     sendGetRequest();
   }
   return (
     <div className="App">
-      <div className="logs">
-        <div className="close">
-          <DatePicker
-            selected={chosenDate}
-            onChange={onDateChange}
-            onClickOutside={onClickOutside}
-          />
-          <button onClick={sendGetRequest}>Select</button>
+      {todo ? <div className="wrap">
+        <div className="logs">
+          <div className="switch">
+            <Switch checkedChildren="Weekly" unCheckedChildren="Daily" />
+          </div>
+          <div className="close">
+            <DatePicker
+              id="datepicker"
+              selected={chosenDate}
+              onChange={onDateChange}
+            />
+            <Button onClick={sendGetRequest}>Select</Button>
+          </div>
+          {todo}
+          <div className="new">
+            <Button type="primary" onClick={() => showModal(dummyRecord)}>
+              New Task
+            </Button>
+          </div>
         </div>
-        {todo || placeholder}
-        <button onClick={() => showModal(dummyRecord)}>New Task</button>
-      </div>
-      <Modal visible={visible} onOk={handleSubmit} onCancel={handleCancel}>
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            name="title"
-            defaultValue={activeRecord.title}
-            ref={inputTitle}
-            placeholder="Enter Todo Title"
-          />
-          <br></br>
-          <label htmlFor="description">Description</label>
-          <input
-            type="text"
-            name="description"
-            defaultValue={activeRecord.description}
-            ref={inputDescription}
-            placeholder="Enter Description"
-          />
-          <br></br>
-          <label htmlFor="date">Date added</label>
-          <input
-            type="date"
-            name="date"
-            defaultValue={activeRecord.date_added}
-            ref={inputDate}
-            readOnly
-            id="readonly"
-          />
-          <br></br>
-          <input
-            type="checkbox"
-            name="completed"
-            ref={inputCompleted}
-            defaultChecked={activeRecord.completed}
-          />
-          <label htmlFor="completed">Completed?</label>
-        </form>
-      </Modal>
+        <Modal visible={visible} onOk={handleSubmit} onCancel={handleCancel}>
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <label htmlFor="title" className="required">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              defaultValue={activeRecord.title}
+              ref={inputTitle}
+              placeholder="Enter Todo Title"
+              required
+            />
+            <br></br>
+            <label htmlFor="description" className="required">
+              Description
+            </label>
+            <input
+              type="text"
+              name="description"
+              defaultValue={activeRecord.description}
+              ref={inputDescription}
+              placeholder="Enter Description"
+            />
+            <br></br>
+            <label htmlFor="date">Date added</label>
+            <input
+              type="date"
+              name="date"
+              defaultValue={activeRecord.date_added}
+              ref={inputDate}
+              readOnly
+              id="readonly"
+            />
+            <br></br>
+            <input
+              type="checkbox"
+              name="completed"
+              ref={inputCompleted}
+              defaultChecked={activeRecord.completed}
+            />
+            <label htmlFor="completed">Completed?</label>
+          </form>
+        </Modal>
+      </div> : placeholder}
     </div>
   );
 }

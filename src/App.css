@@ -12,46 +12,42 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.switch {
+  text-align: left;
+}
 .close {
   display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+  /* justify-content: center; */
+  align-items: center;
+  margin: 10px auto;
 }
 
 #readonly {
   border: 0;
 }
+.new {
+  margin: 10px
+}
+
 input, label {
   margin: 2px;
   vertical-align: middle;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#datepicker {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  height: 32px
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+#placeholder {
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+form label.required:after
+{
+    color: red;
+    content: "*";
 }
