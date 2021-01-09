@@ -1,29 +1,29 @@
 .App {
-  height: 100vh;
+  min-height: 100vh;
   text-align: center;
-  background-color: #282c34;
+  /* background-color: #282c34; */
 }
 
 .logs {
   /* display: inline-block; */
   position: absolute;
   max-width: 1140px;
-  top: 50%;
+  top: 10%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%);
 }
 .switch {
   text-align: left;
 }
 .close {
   display: flex;
-  /* justify-content: center; */
+  justify-content: space-between;
   align-items: center;
   margin: 10px auto;
 }
-
-#readonly {
-  border: 0;
+.date {
+  display: flex;
+  align-items: center;
 }
 .new {
   margin: 10px
@@ -32,6 +32,17 @@
 input, label {
   margin: 2px;
   vertical-align: middle;
+}
+
+#dateRange {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 2px;
+  font-style: italic;
+  color: red;
+}
+#readonly {
+  border: 0;
 }
 #datepicker {
   margin-top: 0px;
