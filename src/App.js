@@ -6,12 +6,10 @@ import {
   ExclamationCircleTwoTone,
 } from "@ant-design/icons";
 import "antd/dist/antd.css";
-import { serverAdd } from "./constants.js";
+import { serverAdd, authAdd, modes, user } from "./constants.js";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
-
-const modes = { daily: 0, weekly: 1}
 
 const milliSecondsInDay = 86400 * 1000;
 const getCorrectDate = (currDate) => {
@@ -28,8 +26,34 @@ const getCorrectDate = (currDate) => {
   }
   return [year, month, day].join("-");
 };
+window.onbeforeunload = () => {
+  localStorage.removeItem("token");
+};
 
 function App() {
+  // authentication
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  if (!isLoggedIn) {
+    fetch(authAdd, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Check credentials (i.e. constants.js).");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        localStorage.setItem("token", res.token);
+        setLoggedIn(true);
+      })
+      .catch(alert);
+  }
+
   // Dates and Modes
   const [chosenDate, setChosenDate] = useState(new Date());
   const mode = useRef(modes.daily);
@@ -38,11 +62,11 @@ function App() {
     mode.current === modes.weekly
       ? "*" +
         getCorrectDate(
-          chosenDate - (chosenDate.getDay() - 1) * milliSecondsInDay
+          chosenDate - ((chosenDate.getDay() + 6) % 7) * milliSecondsInDay
         ) +
         " to " +
         getCorrectDate(
-          chosenDate - (chosenDate.getDay() - 7) * milliSecondsInDay - 7
+          chosenDate - ((chosenDate.getDay() - 7) % 7) * milliSecondsInDay
         )
       : "";
   const dateRange =
@@ -56,7 +80,7 @@ function App() {
     sendGetRequest();
   };
 
-  // All non-GET API Requests 
+  // All non-GET API Requests
   const sendUpdateRequest = (type, item) => {
     let params = "";
     const { key, id, isFirst, ...data } = item;
@@ -68,6 +92,7 @@ function App() {
       method: type,
       headers: {
         "Content-Type": "application/JSON",
+        Authorization: "JWT " + localStorage.getItem("token"),
       },
       body: data ? JSON.stringify(data) : null,
     })
@@ -80,13 +105,18 @@ function App() {
       serverAdd +
       "?" +
       new URLSearchParams({ date: correctDate, mode: mode.current });
-    // console.log(urlWithParams);
     fetch(urlWithParams, {
       headers: {
         "Content-Type": "application/JSON",
+        Authorization: "JWT " + localStorage.getItem("token"),
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Check credentials and try refreshing.");
+        }
+        return res.json();
+      })
       .then((res) => makeList(res))
       .catch((err) => console.log(err));
 
@@ -151,7 +181,6 @@ function App() {
   };
 
   const markAsComplete = (record) => {
-    // console.assert(!record.completed);
     record.completed = true;
     sendUpdateRequest("PUT", record);
   };
@@ -245,8 +274,12 @@ function App() {
     },
   ];
 
-  const placeholder = <p id="placeholder">Loading...</p>;
-  if (todo == null) {
+  const placeholder = (
+    <p id="placeholder">
+      {isLoggedIn ? "Loading..." : "Not logged in."}
+    </p>
+  );
+  if (isLoggedIn && todo == null) {
     sendGetRequest();
   }
 
