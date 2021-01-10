@@ -48,7 +48,7 @@ function App() {
         return res.json();
       })
       .then((res) => {
-        localStorage.setItem("token", res.token);
+        localStorage.setItem("token", res.access);
         setLoggedIn(true);
       })
       .catch(alert);
@@ -74,6 +74,11 @@ function App() {
   const [todo, setTodo] = useState(null);
   const onDateChange = (date) => {
     setChosenDate(date);
+    setTodo(null);
+  };
+  const setToday = () => {
+    setChosenDate(new Date());
+    setTodo(null);
   };
   const onModeChange = () => {
     mode.current = mode.current === modes.daily ? modes.weekly : modes.daily;
@@ -92,7 +97,7 @@ function App() {
       method: type,
       headers: {
         "Content-Type": "application/JSON",
-        Authorization: "JWT " + localStorage.getItem("token"),
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: data ? JSON.stringify(data) : null,
     })
@@ -108,7 +113,7 @@ function App() {
     fetch(urlWithParams, {
       headers: {
         "Content-Type": "application/JSON",
-        Authorization: "JWT " + localStorage.getItem("token"),
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
     })
       .then((res) => {
@@ -118,7 +123,7 @@ function App() {
         return res.json();
       })
       .then((res) => makeList(res))
-      .catch((err) => console.log(err));
+      .catch(alert);
 
     // sample data for development/ debugging
     // const today = new Date().toLocaleDateString("en-us");
@@ -275,9 +280,7 @@ function App() {
   ];
 
   const placeholder = (
-    <p id="placeholder">
-      {isLoggedIn ? "Loading..." : "Not logged in."}
-    </p>
+    <p id="placeholder">{isLoggedIn ? "" : "Not logged in."}</p>
   );
   if (isLoggedIn && todo == null) {
     sendGetRequest();
@@ -303,7 +306,9 @@ function App() {
                   selected={chosenDate}
                   onChange={onDateChange}
                 />
-                <Button onClick={sendGetRequest}>Set Date</Button>
+                <Button onClick={setToday}>
+                  {mode.current === modes.daily ? "Today" : "This Week"}
+                </Button>
               </div>
               <Button type="primary" onClick={() => showModal(dummyRecord)}>
                 New Task
