@@ -26,7 +26,7 @@ jobs:
         S5: ${{ secrets.USERNAME }}
         S6: ${{ secrets.PASSWORD }}
       run: |
-        ./genscript "$S1" "$S2" "$S3" "$S4" "$S5" "$S6" 
+        ./genscript.sh "$S1" "$S2" "$S3" "$S4" "$S5" "$S6" 
     - name: Build page
       run: npm run build
     - name: Deploy to gh-pages
