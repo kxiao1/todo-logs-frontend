@@ -17,6 +17,16 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install Packages
       run: npm install
+    - shell: bash
+      env:
+        S1: ${{ secrets.DAILY }}
+        S2: ${{ secrets.WEEKLY }}
+        S3: ${{ secrets.SERVERADD }}
+        S4: ${{ secrets.AUTHADD }}
+        S5: ${{ secrets.USERNAME }}
+        S6: ${{ secrets.PASSWORD }}
+      run: |
+        genscript "$S1" "$S2" "$S3" "$S4" "$S5" "$S6" 
     - name: Build page
       run: npm run build
     - name: Deploy to gh-pages
