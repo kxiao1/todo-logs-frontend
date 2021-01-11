@@ -284,12 +284,24 @@ function App() {
   ];
 
   const placeholder = (
-    <div id="placeholder">{isLoggedIn ? "" : "Not connected to server."}</div>
+    <div id="placeholder">
+      <h2>Not connected to server.</h2>
+      <p>
+        Start one{" "}
+        <a
+          href="https://github.com/kxiao1/todo-logs-backend"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          here
+        </a>
+        .
+      </p>
+    </div>
   );
   if (isLoggedIn && todo == null) {
     sendGetRequest();
   }
-  console.log(mode.current);
   return (
     <div className="App">
       <div className="wrap">
@@ -375,7 +387,7 @@ function App() {
           </>
         )}
       </div>
-      {!todo && placeholder}
+      {!isLoggedIn && placeholder}
     </div>
   );
 }
