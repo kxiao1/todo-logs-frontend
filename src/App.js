@@ -328,7 +328,7 @@ function App() {
             >
               <form ref={formRef} onSubmit={handleSubmit}>
                 <h2 id="modalTitle">
-                  {inputID.current == -1 ? "New Task" : "Edit Task"}
+                  {inputID.current === -1 ? "New Task" : "Edit Task"}
                 </h2>
                 <label htmlFor="title" className="required">
                   Title
