@@ -350,11 +350,11 @@ function App() {
                   name="title"
                   defaultValue={activeRecord.title}
                   ref={inputTitle}
-                  placeholder="Enter Title"
+                  placeholder="200 Characters Max"
                   required
                 />
                 <br></br>
-                <label htmlFor="description" className="required">
+                <label htmlFor="description">
                   Description
                 </label>
                 <input
@@ -362,7 +362,7 @@ function App() {
                   name="description"
                   defaultValue={activeRecord.description}
                   ref={inputDescription}
-                  placeholder="Enter Description"
+                  placeholder="Optional"
                 />
                 <br></br>
                 <label htmlFor="date">Date added</label>
