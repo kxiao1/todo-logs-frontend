@@ -12,6 +12,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./App.css";
 
 const milliSecondsInDay = 86400 * 1000;
+
+// converts date string into iso format (YYYY-DD-MM)
 const getCorrectDate = (currDate) => {
   const d = new Date(currDate);
   let month = "" + (d.getMonth() + 1);
@@ -26,6 +28,8 @@ const getCorrectDate = (currDate) => {
   }
   return [year, month, day].join("-");
 };
+
+// clear localStorage when tab is closed
 window.onbeforeunload = () => {
   localStorage.removeItem("token");
 };
@@ -51,7 +55,7 @@ function App() {
         localStorage.setItem("token", res.access);
         setLoggedIn(true);
       })
-      .catch(alert);
+      .catch((err) => console.log(err.name, "\n", err.message));
   }
 
   // Dates and Modes
@@ -280,22 +284,24 @@ function App() {
   ];
 
   const placeholder = (
-    <p id="placeholder">{isLoggedIn ? "" : "Not logged in."}</p>
+    <div id="placeholder">{isLoggedIn ? "" : "Not connected to server."}</div>
   );
   if (isLoggedIn && todo == null) {
     sendGetRequest();
   }
-
+  console.log(mode.current);
   return (
     <div className="App">
-      {todo ? (
-        <div className="wrap">
-          <div className="logs">
+      <div className="wrap">
+        <h1 id="title">todo-logs</h1>
+        {todo && (
+          <>
             <div className="switch">
               <Switch
                 onClick={onModeChange}
                 checkedChildren="Weekly"
                 unCheckedChildren="Daily"
+                defaultChecked={mode.current === modes.weekly}
               />
               {dateRange}
             </div>
@@ -315,56 +321,61 @@ function App() {
               </Button>
             </div>
             {todo}
-            <div className="new"></div>
-          </div>
-          <Modal visible={visible} onOk={handleSubmit} onCancel={handleCancel}>
-            <form ref={formRef} onSubmit={handleSubmit}>
-              <label htmlFor="title" className="required">
-                Title
-              </label>
-              <input
-                type="text"
-                name="title"
-                defaultValue={activeRecord.title}
-                ref={inputTitle}
-                placeholder="Enter Todo Title"
-                required
-              />
-              <br></br>
-              <label htmlFor="description" className="required">
-                Description
-              </label>
-              <input
-                type="text"
-                name="description"
-                defaultValue={activeRecord.description}
-                ref={inputDescription}
-                placeholder="Enter Description"
-              />
-              <br></br>
-              <label htmlFor="date">Date added</label>
-              <input
-                type="date"
-                name="date"
-                defaultValue={activeRecord.date_added}
-                ref={inputDate}
-                readOnly
-                id="readonly"
-              />
-              <br></br>
-              <input
-                type="checkbox"
-                name="completed"
-                ref={inputCompleted}
-                defaultChecked={activeRecord.completed}
-              />
-              <label htmlFor="completed">Completed?</label>
-            </form>
-          </Modal>
-        </div>
-      ) : (
-        placeholder
-      )}
+            <Modal
+              visible={visible}
+              onOk={handleSubmit}
+              onCancel={handleCancel}
+            >
+              <form ref={formRef} onSubmit={handleSubmit}>
+                <h2 id="modalTitle">
+                  {inputID.current == -1 ? "New Task" : "Edit Task"}
+                </h2>
+                <label htmlFor="title" className="required">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  defaultValue={activeRecord.title}
+                  ref={inputTitle}
+                  placeholder="Enter Title"
+                  required
+                />
+                <br></br>
+                <label htmlFor="description" className="required">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  name="description"
+                  defaultValue={activeRecord.description}
+                  ref={inputDescription}
+                  placeholder="Enter Description"
+                />
+                <br></br>
+                <label htmlFor="date">Date added</label>
+                <input
+                  type="date"
+                  name="date"
+                  defaultValue={activeRecord.date_added}
+                  ref={inputDate}
+                  readOnly
+                  id="readonly"
+                />
+                <br></br>
+                <input
+                  type="checkbox"
+                  name="completed"
+                  ref={inputCompleted}
+                  defaultChecked={activeRecord.completed}
+                />
+                <label htmlFor="completed">Completed?</label>
+              </form>
+            </Modal>
+          </>
+        )}
+      </div>
+      {!todo && placeholder}
     </div>
   );
 }

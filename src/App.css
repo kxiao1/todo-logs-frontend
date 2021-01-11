@@ -4,7 +4,7 @@
   /* background-color: #282c34; */
 }
 
-.logs {
+.wrap {
   /* display: inline-block; */
   position: absolute;
   max-width: 1140px;
@@ -24,9 +24,6 @@
 .date {
   display: flex;
   align-items: center;
-}
-.new {
-  margin: 10px
 }
 
 input, label {
@@ -56,6 +53,13 @@ input, label {
   transform: translate(-50%, -50%);
   font-size: 48px;
   color: white;
+}
+#modalTitle {
+  font-size: 20px;
+}
+#title {
+  color: white;
+  font-size: 32px;
 }
 form label.required:after
 {
