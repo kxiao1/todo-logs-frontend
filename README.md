@@ -1,5 +1,5 @@
 # Todo-logs (Frontend)
-<https://kxiao.net/todo-logs-frontend>
+<https://kxiao1.com/todo-logs-frontend>
 
 Displays to-do's for a particular day or week (past, present, or future (?)) with the help of a datepicker. Toggle between daily and weekly modes with a switch, and add/edit with a no-frills form.
 
